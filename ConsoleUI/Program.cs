@@ -1,2 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+using SchedulerMain;
+
+var scheduler = new Scheduler();
+scheduler.Launch();
+scheduler.Configurate();
+scheduler.Run();
