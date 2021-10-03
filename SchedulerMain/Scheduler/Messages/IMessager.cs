@@ -1,7 +1,6 @@
-﻿
-namespace SchedulerMain
+﻿namespace Domain
 {
-    public interface IMessagerScheduler
+    public interface IMessager
     {
         string ErrorMessage { get; }
 

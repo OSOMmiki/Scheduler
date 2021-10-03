@@ -1,6 +1,6 @@
-﻿namespace SchedulerMain
+﻿namespace Domain
 {
-    public class ConfigurationScheduler : IConfigurationScheduler
+    public class Configuration : IConfiguration
     {
         public bool IsEnabled { get; set; }
         public FrecuencyEnum FrecuencyType { get; set; }

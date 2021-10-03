@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SchedulerMain\SchedulerMain.csproj" />
+    <ProjectReference Include="..\SchedulerMain\Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace SchedulerMain
+﻿namespace Domain
 {
     public class FrecuencyEnumSelector
     {

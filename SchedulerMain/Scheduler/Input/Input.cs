@@ -1,6 +1,6 @@
-﻿namespace SchedulerMain
+﻿namespace Domain
 {
-    public class InputScheduler : IInputScheduler
+    public class Input : IInput
     {
         public DateTime InitialDate => DateTime.Now;
 

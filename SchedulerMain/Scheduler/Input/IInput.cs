@@ -1,7 +1,6 @@
-﻿
-namespace SchedulerMain
+﻿namespace Domain
 {
-    public interface IInputScheduler
+    public interface IInput
     {
         string DescriptionInput { get; }
         DateTime InitialDate { get; }

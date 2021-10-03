@@ -1,7 +1,6 @@
-﻿
-namespace SchedulerMain
+﻿namespace Domain
 {
-    public interface IConfigurationScheduler
+    public interface IConfiguration
     {
         DateTime Date { get; set; }
         FrecuencyEnum FrecuencyType { get; set; }

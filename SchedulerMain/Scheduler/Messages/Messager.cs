@@ -1,6 +1,6 @@
-﻿namespace SchedulerMain
+﻿namespace Domain
 {
-    public class MessagerScheduler : IMessagerScheduler
+    public class Messager : IMessager
     {
         public string ErrorMessage => "The configuration of the Scheduler is not correct";
 

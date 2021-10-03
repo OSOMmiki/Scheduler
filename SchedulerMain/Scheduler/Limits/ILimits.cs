@@ -1,7 +1,6 @@
-﻿
-namespace SchedulerMain
+﻿namespace Domain
 {
-    public interface ILimitsScheduler
+    public interface ILimits
     {
         DateTime EndDate { get; set; }
         DateTime StartDate { get; set; }
