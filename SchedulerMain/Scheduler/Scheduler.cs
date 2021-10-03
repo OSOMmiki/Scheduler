@@ -1,7 +1,7 @@
 ﻿using Domain;
-
 namespace Domain
 {
+    //TODO
     public class Scheduler : IScheduler
     {
         private Queue<DateTime> datesScheduled;
@@ -19,14 +19,13 @@ namespace Domain
             this.limits = limits ?? throw new ArgumentNullException(nameof(limits));
             this.messager = messager ?? throw new ArgumentNullException(nameof(messager));
         }
-
+        
         public void Initiate()
         {
             if (validateConfiguration(input, configuration, limits))
             {
                 return;
             }
-
 
             isInitiated = true;
         }

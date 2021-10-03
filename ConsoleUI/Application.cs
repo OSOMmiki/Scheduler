@@ -6,7 +6,7 @@ namespace ConsoleUI
     {
         private readonly IScheduler scheduler;
 
-        public Application(Scheduler scheduler)
+        public Application(IScheduler scheduler)
         {
             this.scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
         }

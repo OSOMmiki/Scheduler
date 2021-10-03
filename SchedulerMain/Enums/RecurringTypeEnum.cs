@@ -1,6 +1,6 @@
 ﻿namespace Domain
 {
-    public enum  RecurringType
+    public enum RecurringType
     {
         Daily,
         Weekly,
