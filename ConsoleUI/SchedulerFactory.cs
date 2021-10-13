@@ -15,8 +15,7 @@ namespace ConsoleUI
             IInput input = this.GetInput();
             IConfiguration configuration = this.GetConfiguration();
             ILimits limits = this.GetLimits();
-            IMessager messager = new Messager();
-            return new Scheduler(input,configuration,limits,messager);
+            return new Scheduler(input,configuration,limits);
         }
 
         private IInput GetInput()
@@ -29,9 +28,9 @@ namespace ConsoleUI
         {
             IConfiguration configuration = new Configuration()
             {
-                FrecuencyType = FrecuencyEnum.Once,
+                FrecuencyType = FrecuencyEnum.Recurring,
                 IsEnabled = true,
-                Date = DateTime.Now,
+                Date = DateTime.Today,
                 RecurringType = RecurringType.Daily,
                 RecurringDelay = 1
             };
@@ -43,7 +42,7 @@ namespace ConsoleUI
             ILimits limits = new Limits()
             {
                 StartDate = null,
-                EndDate = null
+                EndDate = DateTime.Today.AddDays(5)
             };
             return limits;
         }

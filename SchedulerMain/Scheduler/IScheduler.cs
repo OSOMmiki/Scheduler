@@ -2,7 +2,7 @@
 {
     public interface IScheduler
     {
-        void Initiate();
+        void ValidateConfig();
         string NextScheduledDate();
     }
 }

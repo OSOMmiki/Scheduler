@@ -13,12 +13,21 @@ namespace ConsoleUI
 
         public void Run()
         {
-            scheduler.Initiate();
-
-            while (ConsoleMessages.AskNextDate())
+            try
             {
-                scheduler.NextScheduledDate();
-            }   
+                scheduler.ValidateConfig();
+                while (ConsoleMessages.AskNextDate())
+                {
+                     Console.WriteLine(scheduler.NextScheduledDate());
+                } 
+
+            }
+            catch (ValidatorException exc)
+            {
+                Console.Error.WriteLine(exc.Message);
+            }
+
+              
         }
     }
 }
