@@ -1,11 +1,12 @@
-﻿namespace Domain
+﻿
+namespace Domain
 {
-    public class Configuration : IConfiguration
+    public class Configuration
     {
         public bool IsEnabled { get; set; }
-        public FrecuencyEnum FrecuencyType { get; set; }
         public DateTime? Date { get; set; }
-        public RecurringType? RecurringType { get; set; }
-        public int? RecurringDelay { get; set; }
+        public int? Periodicity { get; set; }
+        public WeeklyConfiguration? WeeklyConfiguration { get; set; }    
+        public DailyConfiguration? DailyConfiguration { get; set; }
     }
 }

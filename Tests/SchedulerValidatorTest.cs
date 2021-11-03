@@ -21,22 +21,23 @@ namespace Tests
         }
 
         [Theory]
-        [InlineData(RecurringType.Daily,1)]
-        [InlineData(RecurringType.Daily, 10)]
-        public void validate_recurring_configuration_correct_test(RecurringType? recurringType, int? recurringDelay)
+        [InlineData(1)]
+        [InlineData(10)]
+        public void validate_recurring_configuration_correct_test(int? periodicity)
         {
-            Action action = () => SchedulerValidator.ValidateRecurringConfiguration(recurringType,recurringDelay);
+            Action action = () => SchedulerValidator.ValidateRecurringConfiguration(periodicity);
             action.Should().NotThrow<ValidatorException>();
         }
 
         [Theory]
-        [InlineData(null, 10)]
-        [InlineData(RecurringType.Daily, 0)]
-        [InlineData(RecurringType.Daily, null)]
-        [InlineData(null, null)]
-        public void validate_recurring_configuration_error_test(RecurringType? recurringType, int? recurringDelay)
+ 
+        [InlineData(0)]
+        [InlineData(null)]
+        [InlineData(-1)]
+
+        public void validate_recurring_configuration_error_test( int? periodicity)
         {
-            Action action = () => SchedulerValidator.ValidateRecurringConfiguration(recurringType, recurringDelay);
+            Action action = () => SchedulerValidator.ValidateRecurringConfiguration(periodicity);
             action.Should().Throw<ValidatorException>();
         }
 

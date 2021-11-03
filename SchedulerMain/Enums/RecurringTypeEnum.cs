@@ -3,8 +3,6 @@
     public enum RecurringType
     {
         Daily,
-        Weekly,
-        Monthly,
-        Yearly
+        Weekly
     }
 }

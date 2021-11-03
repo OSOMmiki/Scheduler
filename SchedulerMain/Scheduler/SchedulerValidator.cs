@@ -15,14 +15,9 @@ namespace Domain
                 GenerateError("Scheduler Is Disabled");
             }
         }
-        public static void ValidateRecurringConfiguration(RecurringType? recurringType, int? recurringDelay) 
-        {
-            if(recurringType == null)
-            {
-                GenerateError("You mus select a recurring type.");
-            }
-            
-            if(recurringDelay== null || recurringDelay <= 0)
+        public static void ValidateRecurringConfiguration( int? periodicity)
+        { 
+            if(periodicity == null || periodicity <= 0)
             {
                 GenerateError("You must select a valid recurring dealy.");
             }
@@ -47,6 +42,29 @@ namespace Domain
                 (date >= endDate && endDate != null))
             {
                 GenerateError("The date to Scheduled is out of limits range.");
+            }
+        }
+
+        public static void ValidateOnceTimeNotNull(TimeSpan? onceTime)
+        {
+            if(onceTime == null)
+            {
+                GenerateError("The Once at time can't be null.");
+            }
+        }
+
+        public static void ValidateStartingEndingDaily(TimeSpan starting, TimeSpan ending)
+        {
+            if(ending < starting)
+            {
+                GenerateError("The ending time for daily configurations cant be before the starting time.");
+            }
+        }
+        public static void ValidateWeeklyConfiguration(WeeklyConfiguration weeklyConfiguration)
+        {
+            if(weeklyConfiguration.ActiveDays == null)
+            {
+                GenerateError("There must be at least a day of the week selected.")
             }
         }
         private static void GenerateError(string errorMsg)

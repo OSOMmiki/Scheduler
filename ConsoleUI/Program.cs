@@ -4,6 +4,6 @@ using ConsoleUI;
 
 ISchedulerFactory factory = new SchedulerFactory();
 
-Application application = new(factory.GetScheduler());
+Application application = new(factory.GetScheduler(Domain.RecurringType.Weekly, Domain.FrecuencyEnum.Recurring));
 
 application.Run();

@@ -1,6 +1,6 @@
 ﻿namespace Domain
 {
-    public class Input : IInput
+    public class Input
     {
         public DateTime InitialDate => DateTime.Now;
 

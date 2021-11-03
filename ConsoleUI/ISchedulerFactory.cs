@@ -4,6 +4,6 @@ namespace ConsoleUI
 {
     public interface ISchedulerFactory
     {
-        public IScheduler GetScheduler();
+        public IScheduler GetScheduler(RecurringType recurringType, FrecuencyEnum frecuencyEnum);
     }
 }

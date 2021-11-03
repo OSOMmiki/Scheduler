@@ -10,39 +10,99 @@ namespace ConsoleUI
     //TODO cambiar la creacion de las distintas dependencias del scheduler para obtenerlas por consola.
     internal class SchedulerFactory : ISchedulerFactory
     {
-        public IScheduler GetScheduler()
-        {
-            IInput input = this.GetInput();
-            IConfiguration configuration = this.GetConfiguration();
-            ILimits limits = this.GetLimits();
-            return new Scheduler(input,configuration,limits);
+        public IScheduler GetScheduler(RecurringType recurringType, FrecuencyEnum frecuencyEnum)
+        { 
+           
+            if(frecuencyEnum == FrecuencyEnum.Once)
+            { 
+                Input input = this.GetInput();
+                Configuration configuration = this.GetBasicConfiguration();
+                Limits limits = this.GetLimits();
+                return new OnceScheduler(configuration, limits);
+            }
+            else
+            {
+                if(recurringType == RecurringType.Daily)
+                {
+                    Input input = this.GetInput();
+                    Configuration configuration = this.GetConfigurationWithDaily();
+                    Limits limits = this.GetLimits();
+                    return new DailyScheduler(input, configuration, limits);
+                }
+                else
+                {
+                    Input input = this.GetInput();
+                    Configuration configuration = this.GetConfigurationWithWeekly();
+                    Limits limits = this.GetLimits();
+                    return new WeeklyScheduler(input, configuration, limits);
+                }
+            }
         }
 
-        private IInput GetInput()
+        private Input GetInput()
         {
-            IInput input = new Input();
+            Input input = new Input();
             return input;
         }
         
-        private IConfiguration GetConfiguration()
+        private Configuration GetBasicConfiguration()
         {
-            IConfiguration configuration = new Configuration()
+            Configuration configuration = new Configuration()
             {
-                FrecuencyType = FrecuencyEnum.Recurring,
                 IsEnabled = true,
                 Date = DateTime.Today,
-                RecurringType = RecurringType.Daily,
-                RecurringDelay = 1
+                Periodicity = 1
             };
             return configuration;
         }
 
-        private ILimits GetLimits()
+        private Configuration GetConfigurationWithDaily()
         {
-            ILimits limits = new Limits()
+            Configuration configuration = new Configuration()
+            {
+                IsEnabled = true,
+                Date = DateTime.Today,
+                Periodicity = 2,
+                DailyConfiguration = new DailyConfiguration()
+                {
+                    IsOnce = true,
+                    OnceTime = TimeSpan.FromHours(14)
+                }
+            };
+            return configuration;
+        }
+
+        private Configuration GetConfigurationWithWeekly()
+        {
+            Configuration configuration = new Configuration()
+            {
+                IsEnabled = true,
+                Date = DateTime.Today,
+                Periodicity = 2,
+                DailyConfiguration = new DailyConfiguration()
+                {
+                    IsOnce = false,
+                    Periodicity = 2,
+                    DailyFrecuencyEnum = DailyFrecuencyEnum.Hours,
+                    StartingTime = TimeSpan.FromHours(10),
+                    EndingTime = TimeSpan.FromHours(16)
+                },
+                WeeklyConfiguration = new WeeklyConfiguration()
+                {
+                    Periodicity = 4,
+                    ActiveDays = new DayOfWeek[3] { DayOfWeek.Monday, DayOfWeek.Wednesday , DayOfWeek.Friday}
+                }
+
+            };
+            return configuration;
+        }
+
+        private Limits GetLimits()
+        {
+            Limits limits = new Limits()
             {
                 StartDate = null,
-                EndDate = DateTime.Today.AddDays(5)
+                EndDate = null
             };
             return limits;
         }
