@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain
 {
@@ -11,12 +7,12 @@ namespace Domain
         public bool IsOnce { get; set; }
         public TimeSpan OnceTime {get; set;}
         public int Periodicity { get; set; }
-        public DailyFrecuencyEnum DailyFrecuencyEnum { get; set; }
+        public DailyFrecuencyEnum DailyFrecuency { get; set; }
         public TimeSpan StartingTime { get; set; }
         public TimeSpan EndingTime { get; set; }
         public int GetTotalSecondsPeriocity()
         {
-            switch (DailyFrecuencyEnum)
+            switch (DailyFrecuency)
             {
                 case DailyFrecuencyEnum.Hours:
                     return Periodicity * 3600;

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Domain
 {
@@ -84,7 +81,7 @@ namespace Domain
 
         private DateTime AddTimeDelay()
         {
-            switch (configuration.DailyConfiguration.DailyFrecuencyEnum)
+            switch (configuration.DailyConfiguration.DailyFrecuency)
             {
                 case DailyFrecuencyEnum.Hours:
                     return lastDateScheduled.AddHours(configuration.DailyConfiguration.Periodicity);
@@ -135,7 +132,7 @@ namespace Domain
         }
         private void CheckFinished(DateTime output)
         {
-            if (limits.EndDate != null && CalculateNextDateTime() > limits.EndDate)
+            if (limits.EndDate.HasValue && CalculateNextDateTime() > limits.EndDate.Value)
             {
                 isFinished = true;
             }

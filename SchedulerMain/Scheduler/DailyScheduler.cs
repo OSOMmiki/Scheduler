@@ -71,7 +71,7 @@ namespace Domain
 
         private DateTime AddTimeDelay()
         {
-            switch (configuration.DailyConfiguration.DailyFrecuencyEnum)
+            switch (configuration.DailyConfiguration.DailyFrecuency)
             {
                 case DailyFrecuencyEnum.Hours:
                     return lastDateScheduled.AddHours(configuration.DailyConfiguration.Periodicity);

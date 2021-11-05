@@ -1,6 +1,7 @@
 ﻿using Domain;
 using Xunit;
 using FluentAssertions;
+using System;
 
 namespace Tests
 {
@@ -133,7 +134,68 @@ namespace Tests
             var endDate = DateTime.Today.AddDays(endDays);
             var date = DateTime.Today.AddDays(days);
             Action action = () => SchedulerValidator.ValidateDateBetweenLimits(startDate, endDate, date);
+            action.Should().Throw<ValidatorException>();
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(100)]
+        [InlineData(-100)]
+        public void validate_once_time_not_null_correct_test(int seconds)
+        {
+            TimeSpan time = DateTime.Now.TimeOfDay.Add(TimeSpan.FromSeconds(seconds));
+            Action action = () => SchedulerValidator.ValidateOnceTimeNotNull(time);
             action.Should().NotThrow<ValidatorException>();
+        }
+
+        [Fact]
+        public void validate_once_time_not_null_error_test()
+        {
+            Action action = () => SchedulerValidator.ValidateOnceTimeNotNull(null);
+            action.Should().Throw<ValidatorException>();
+        }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(0, 10)]
+        public void validate_starting_ending_daily_correct_test(int startOffset, int endOffset)
+        {
+            var startTime = DateTime.Now.TimeOfDay.Add(TimeSpan.FromSeconds(startOffset)); 
+            var endTime = DateTime.Now.TimeOfDay.Add(TimeSpan.FromSeconds(endOffset));
+            Action action = () => SchedulerValidator.ValidateStartingEndingDaily(startTime, endTime);
+            action.Should().NotThrow<ValidatorException>();
+        }
+
+        [Theory]
+        [InlineData(10, 0)]
+        [InlineData(0, -10)]
+        public void validate_starting_ending_daily_error_test(int startOffset, int endOffset)
+        {
+            var startTime = DateTime.Now.TimeOfDay.Add(TimeSpan.FromSeconds(startOffset));
+            var endTime = DateTime.Now.TimeOfDay.Add(TimeSpan.FromSeconds(endOffset));
+            Action action = () => SchedulerValidator.ValidateStartingEndingDaily(startTime, endTime);
+            action.Should().Throw<ValidatorException>();
+        }
+
+        [Fact]
+        public void validate_weekly_configuration_correct_test()
+        {
+            
+            var listOfDays = new DayOfWeek[1]{ DayOfWeek.Friday};
+            var weeklyConfig = new WeeklyConfiguration()
+            {
+                ActiveDays = listOfDays
+            };
+            Action action = () => SchedulerValidator.ValidateWeeklyConfiguration(weeklyConfig);
+            action.Should().NotThrow<ValidatorException>();
+        }
+
+        [Fact]
+        public void validate_weekly_configuration_error_test()
+        {
+            var weeklyConfig = new WeeklyConfiguration();
+            Action action = () => SchedulerValidator.ValidateWeeklyConfiguration(weeklyConfig);
+            action.Should().Throw<ValidatorException>();
         }
     }
 }

@@ -1,9 +1,16 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿namespace ConsoleUI
+{
+    public class Program
+    {
+    static void Main(string[] args)
+    {
+            ISchedulerFactory factory = new SchedulerFactory();
 
-using ConsoleUI;
+            Application application = new Application(factory.GetScheduler(Domain.RecurringType.Weekly, Domain.FrecuencyEnum.Recurring));
 
-ISchedulerFactory factory = new SchedulerFactory();
+            application.Run();
+        }
+    }
+}
 
-Application application = new(factory.GetScheduler(Domain.RecurringType.Weekly, Domain.FrecuencyEnum.Recurring));
 
-application.Run();

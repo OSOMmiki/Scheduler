@@ -1,10 +1,5 @@
 ﻿using Domain;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ConsoleUI
 {
     //TODO cambiar la creacion de las distintas dependencias del scheduler para obtenerlas por consola.
@@ -83,7 +78,7 @@ namespace ConsoleUI
                 {
                     IsOnce = false,
                     Periodicity = 2,
-                    DailyFrecuencyEnum = DailyFrecuencyEnum.Hours,
+                    DailyFrecuency = DailyFrecuencyEnum.Hours,
                     StartingTime = TimeSpan.FromHours(10),
                     EndingTime = TimeSpan.FromHours(16)
                 },

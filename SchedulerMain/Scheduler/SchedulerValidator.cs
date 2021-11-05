@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain
 {
@@ -38,8 +34,8 @@ namespace Domain
         }
         public static void ValidateDateBetweenLimits(DateTime? startDate, DateTime? endDate, DateTime? date)
         {
-            if((startDate >= date && startDate != null) || 
-                (date >= endDate && endDate != null))
+            if((startDate > date && startDate != null) || 
+                (date > endDate && endDate != null))
             {
                 GenerateError("The date to Scheduled is out of limits range.");
             }
@@ -64,7 +60,7 @@ namespace Domain
         {
             if(weeklyConfiguration.ActiveDays == null)
             {
-                GenerateError("There must be at least a day of the week selected.")
+                GenerateError("There must be at least a day of the week selected.");
             }
         }
         private static void GenerateError(string errorMsg)
