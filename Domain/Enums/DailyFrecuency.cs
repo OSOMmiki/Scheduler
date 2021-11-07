@@ -1,6 +1,6 @@
 ﻿namespace Domain
 {
-    public enum DailyFrecuencyEnum
+    public enum DailyFrecuency
     {
         Hours,
         Minutes,

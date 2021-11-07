@@ -41,7 +41,7 @@ namespace Domain
             {
                 lastDateScheduled = CalculateNextDateTime();
             }
-            CheckFinished(lastDateScheduled);
+            CheckFinished();
             return lastDateScheduled;
         }
         private DateTime CalculateNextDateTime()
@@ -83,14 +83,14 @@ namespace Domain
         {
             switch (configuration.DailyConfiguration.DailyFrecuency)
             {
-                case DailyFrecuencyEnum.Hours:
+                case DailyFrecuency.Hours:
                     return lastDateScheduled.AddHours(configuration.DailyConfiguration.Periodicity);
-                case DailyFrecuencyEnum.Minutes:
+                case DailyFrecuency.Minutes:
                     return lastDateScheduled.AddMinutes(configuration.DailyConfiguration.Periodicity);
-                case DailyFrecuencyEnum.Seconds:
+                case DailyFrecuency.Seconds:
                     return lastDateScheduled.AddSeconds(configuration.DailyConfiguration.Periodicity);
                 default:
-                    throw new Exception("There is selected a Daily Frecuency not avalible");
+                    throw new SchedulerException("There is selected a Daily Frecuency not avalible");
             }
         }
 
@@ -130,7 +130,7 @@ namespace Domain
             }
             return true;
         }
-        private void CheckFinished(DateTime output)
+        private void CheckFinished()
         {
             if (limits.EndDate.HasValue && CalculateNextDateTime() > limits.EndDate.Value)
             {

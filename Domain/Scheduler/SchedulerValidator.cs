@@ -6,7 +6,7 @@ namespace Domain
     {
         public static void ValidateConfigurationEnabled(bool isEnabled)
         {
-            if(isEnabled == false)
+            if(!isEnabled) 
             {
                 GenerateError("Scheduler Is Disabled");
             }

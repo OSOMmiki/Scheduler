@@ -7,21 +7,21 @@ namespace Domain
         public bool IsOnce { get; set; }
         public TimeSpan OnceTime {get; set;}
         public int Periodicity { get; set; }
-        public DailyFrecuencyEnum DailyFrecuency { get; set; }
+        public DailyFrecuency DailyFrecuency { get; set; }
         public TimeSpan StartingTime { get; set; }
         public TimeSpan EndingTime { get; set; }
         public int GetTotalSecondsPeriocity()
         {
             switch (DailyFrecuency)
             {
-                case DailyFrecuencyEnum.Hours:
+                case DailyFrecuency.Hours:
                     return Periodicity * 3600;
-                case DailyFrecuencyEnum.Minutes:
+                case DailyFrecuency.Minutes:
                     return Periodicity * 60;
-                case DailyFrecuencyEnum.Seconds:
+                case DailyFrecuency.Seconds:
                     return Periodicity;
                 default:
-                    throw new Exception("There is selected a Daily Frecuency not avalible");
+                    throw new SchedulerException("There is selected a Daily Frecuency not avalible");
 
 
             }

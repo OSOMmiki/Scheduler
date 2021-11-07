@@ -2,45 +2,42 @@
 using System;
 namespace ConsoleUI
 {
-    //TODO cambiar la creacion de las distintas dependencias del scheduler para obtenerlas por consola.
     internal class SchedulerFactory : ISchedulerFactory
     {
-        public IScheduler GetScheduler(RecurringType recurringType, FrecuencyEnum frecuencyEnum)
+        public IScheduler GetScheduler(RecurringType recurringType, Frecuency frecuencyEnum)
         { 
            
-            if(frecuencyEnum == FrecuencyEnum.Once)
+            if(frecuencyEnum == Frecuency.Once)
             { 
-                Input input = this.GetInput();
-                Configuration configuration = this.GetBasicConfiguration();
-                Limits limits = this.GetLimits();
+                Configuration configuration = GetBasicConfiguration();
+                Limits limits = GetLimits();
                 return new OnceScheduler(configuration, limits);
             }
             else
             {
                 if(recurringType == RecurringType.Daily)
                 {
-                    Input input = this.GetInput();
-                    Configuration configuration = this.GetConfigurationWithDaily();
-                    Limits limits = this.GetLimits();
+                    Input input = GetInput();
+                    Configuration configuration = GetConfigurationWithDaily();
+                    Limits limits = GetLimits();
                     return new DailyScheduler(input, configuration, limits);
                 }
                 else
                 {
-                    Input input = this.GetInput();
-                    Configuration configuration = this.GetConfigurationWithWeekly();
-                    Limits limits = this.GetLimits();
+                    Input input = GetInput();
+                    Configuration configuration = GetConfigurationWithWeekly();
+                    Limits limits = GetLimits();
                     return new WeeklyScheduler(input, configuration, limits);
                 }
             }
         }
 
-        private Input GetInput()
-        {
-            Input input = new Input();
-            return input;
+        private static Input GetInput()
+        { 
+            return new Input();
         }
         
-        private Configuration GetBasicConfiguration()
+        private static Configuration GetBasicConfiguration()
         {
             Configuration configuration = new Configuration()
             {
@@ -51,7 +48,7 @@ namespace ConsoleUI
             return configuration;
         }
 
-        private Configuration GetConfigurationWithDaily()
+        private static Configuration GetConfigurationWithDaily()
         {
             Configuration configuration = new Configuration()
             {
@@ -67,7 +64,7 @@ namespace ConsoleUI
             return configuration;
         }
 
-        private Configuration GetConfigurationWithWeekly()
+        private static Configuration GetConfigurationWithWeekly()
         {
             Configuration configuration = new Configuration()
             {
@@ -78,7 +75,7 @@ namespace ConsoleUI
                 {
                     IsOnce = false,
                     Periodicity = 2,
-                    DailyFrecuency = DailyFrecuencyEnum.Hours,
+                    DailyFrecuency = DailyFrecuency.Hours,
                     StartingTime = TimeSpan.FromHours(10),
                     EndingTime = TimeSpan.FromHours(16)
                 },
@@ -92,7 +89,7 @@ namespace ConsoleUI
             return configuration;
         }
 
-        private Limits GetLimits()
+        private static Limits GetLimits()
         {
             Limits limits = new Limits()
             {

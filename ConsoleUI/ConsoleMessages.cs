@@ -2,7 +2,7 @@
 
 namespace ConsoleUI
 {
-    internal class ConsoleMessages
+    internal static class ConsoleMessages
     {
         public static void PlaceWhiteSpace()
         {
