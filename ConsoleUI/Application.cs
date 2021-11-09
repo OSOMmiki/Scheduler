@@ -1,25 +1,24 @@
-﻿using System;
-using Domain;
+﻿using Domain;
 
 namespace ConsoleUI
 {
     internal class Application
     {
-        private readonly IScheduler scheduler;
-
-        public Application(IScheduler scheduler)
+        private readonly Configuration configuration;
+        public Application(Configuration configuration)
         {
-            this.scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         public void Run()
         {
             try
             {
-                scheduler.ValidateConfig();
+               
                 while (ConsoleMessages.AskNextDate())
-                {
-                     Console.WriteLine(scheduler.NextScheduledDate());
+                { 
+                    string output = Scheduler.NextOnceDate(configuration);
+                     Console.WriteLine(output);
                 } 
 
             }

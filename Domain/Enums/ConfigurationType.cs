@@ -1,6 +1,6 @@
 ﻿namespace Domain
 {
-    public enum Frecuency
+    public enum ConfigurationType
     {
         Once,
         Recurring

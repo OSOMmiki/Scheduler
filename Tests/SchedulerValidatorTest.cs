@@ -1,8 +1,6 @@
 ﻿using Domain;
 using Xunit;
 using FluentAssertions;
-using System;
-
 namespace Tests
 {
     public class SchedulerValidatorTest
@@ -143,7 +141,7 @@ namespace Tests
         [InlineData(-100)]
         public void validate_once_time_not_null_correct_test(int seconds)
         {
-            TimeSpan time = DateTime.Now.TimeOfDay.Add(TimeSpan.FromSeconds(seconds));
+            TimeOnly time = TimeOnly.FromDateTime(DateTime.Now.AddSeconds(seconds));
             Action action = () => SchedulerValidator.ValidateOnceTimeNotNull(time);
             action.Should().NotThrow<ValidatorException>();
         }
@@ -160,8 +158,8 @@ namespace Tests
         [InlineData(0, 10)]
         public void validate_starting_ending_daily_correct_test(int startOffset, int endOffset)
         {
-            var startTime = DateTime.Now.TimeOfDay.Add(TimeSpan.FromSeconds(startOffset)); 
-            var endTime = DateTime.Now.TimeOfDay.Add(TimeSpan.FromSeconds(endOffset));
+            var startTime = TimeOnly.FromDateTime(DateTime.Now.AddSeconds(startOffset));
+            var endTime = TimeOnly.FromDateTime(DateTime.Now.AddSeconds(endOffset));
             Action action = () => SchedulerValidator.ValidateStartingEndingDaily(startTime, endTime);
             action.Should().NotThrow<ValidatorException>();
         }
@@ -171,8 +169,8 @@ namespace Tests
         [InlineData(0, -10)]
         public void validate_starting_ending_daily_error_test(int startOffset, int endOffset)
         {
-            var startTime = DateTime.Now.TimeOfDay.Add(TimeSpan.FromSeconds(startOffset));
-            var endTime = DateTime.Now.TimeOfDay.Add(TimeSpan.FromSeconds(endOffset));
+            var startTime = TimeOnly.FromDateTime(DateTime.Now.AddSeconds(startOffset));
+            var endTime = TimeOnly.FromDateTime(DateTime.Now.AddSeconds(endOffset));
             Action action = () => SchedulerValidator.ValidateStartingEndingDaily(startTime, endTime);
             action.Should().Throw<ValidatorException>();
         }
@@ -180,21 +178,16 @@ namespace Tests
         [Fact]
         public void validate_weekly_configuration_correct_test()
         {
-            
-            var listOfDays = new DayOfWeek[1]{ DayOfWeek.Friday};
-            var weeklyConfig = new WeeklyConfiguration()
-            {
-                ActiveDays = listOfDays
-            };
-            Action action = () => SchedulerValidator.ValidateWeeklyConfiguration(weeklyConfig);
+            var listOfDays = new DayWeek[1]{ DayWeek.Friday};
+            Action action = () => SchedulerValidator.ValidateWeeklyConfiguration(listOfDays);
             action.Should().NotThrow<ValidatorException>();
         }
 
         [Fact]
         public void validate_weekly_configuration_error_test()
         {
-            var weeklyConfig = new WeeklyConfiguration();
-            Action action = () => SchedulerValidator.ValidateWeeklyConfiguration(weeklyConfig);
+            var listODays = Array.Empty<DayWeek>();
+            Action action = () => SchedulerValidator.ValidateWeeklyConfiguration(listODays);
             action.Should().Throw<ValidatorException>();
         }
     }

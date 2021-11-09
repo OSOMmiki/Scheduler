@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Domain
+﻿namespace Domain
 {
     [Serializable]
     public class SchedulerException : Exception

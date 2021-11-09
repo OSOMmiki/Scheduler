@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ConsoleUI
+﻿namespace ConsoleUI
 {
     internal static class ConsoleMessages
     {

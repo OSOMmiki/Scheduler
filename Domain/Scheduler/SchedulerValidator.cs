@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Domain
+﻿namespace Domain
 {
     public static class SchedulerValidator
     {
@@ -41,7 +39,7 @@ namespace Domain
             }
         }
 
-        public static void ValidateOnceTimeNotNull(TimeSpan? onceTime)
+        public static void ValidateOnceTimeNotNull(TimeOnly? onceTime)
         {
             if(onceTime == null)
             {
@@ -49,16 +47,16 @@ namespace Domain
             }
         }
 
-        public static void ValidateStartingEndingDaily(TimeSpan starting, TimeSpan ending)
+        public static void ValidateStartingEndingDaily(TimeOnly starting, TimeOnly ending)
         {
             if(ending < starting)
             {
                 GenerateError("The ending time for daily configurations cant be before the starting time.");
             }
         }
-        public static void ValidateWeeklyConfiguration(WeeklyConfiguration weeklyConfiguration)
+        public static void ValidateWeeklyConfiguration(DayWeek[] daysOfWeek)
         {
-            if(weeklyConfiguration.ActiveDays == null)
+            if(daysOfWeek.Length<=0)
             {
                 GenerateError("There must be at least a day of the week selected.");
             }

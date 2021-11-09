@@ -1,16 +1,12 @@
-﻿namespace ConsoleUI
+﻿using ConsoleUI;
+using Domain;
+
+var configuration = new Configuration()
 {
-    public class Program
-    {
-    static void Main(string[] args)
-    {
-            ISchedulerFactory factory = new SchedulerFactory();
-
-            Application application = new Application(factory.GetScheduler(Domain.RecurringType.Weekly, Domain.Frecuency.Recurring));
-
-            application.Run();
-        }
-    }
-}
+    OnceDate = DateTime.Now
+};
 
 
+Application application = new Application(configuration);
+
+application.Run();
