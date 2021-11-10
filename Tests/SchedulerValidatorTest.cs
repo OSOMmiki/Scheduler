@@ -8,14 +8,14 @@ namespace Tests
         [Fact]
         public void validate_configuration_enabled_false_test()
         {
-            Action action = () => SchedulerValidator.ValidateConfigurationEnabled(false);
+            Action action = () => ConfigurationValidator.ValidateConfigurationEnabled(false);
             action.Should().Throw<ValidatorException>();
         }
 
         [Fact]
         public void validate_configuration_enabled_true_test()
         {
-            Action action = () => SchedulerValidator.ValidateConfigurationEnabled(true);
+            Action action = () => ConfigurationValidator.ValidateConfigurationEnabled(true);
             action.Should().NotThrow<ValidatorException>();
         }
 
@@ -24,7 +24,7 @@ namespace Tests
         [InlineData(10)]
         public void validate_recurring_configuration_correct_test(int? periodicity)
         {
-            Action action = () => SchedulerValidator.ValidateRecurringConfiguration(periodicity);
+            Action action = () => ConfigurationValidator.ValidateRecurringConfiguration(periodicity);
             action.Should().NotThrow<ValidatorException>();
         }
 
@@ -36,7 +36,7 @@ namespace Tests
 
         public void validate_recurring_configuration_error_test( int? periodicity)
         {
-            Action action = () => SchedulerValidator.ValidateRecurringConfiguration(periodicity);
+            Action action = () => ConfigurationValidator.ValidateRecurringConfiguration(periodicity);
             action.Should().Throw<ValidatorException>();
         }
 
@@ -46,32 +46,20 @@ namespace Tests
         [InlineData(-100)]
         public void validate_once_configuration_correct_test(int days)
         {
-            Action action = () => SchedulerValidator.ValidateOnceConfiguration(DateTime.Today.AddDays(days));
+            Action action = () => ConfigurationValidator.ValidateOnceConfiguration(DateTime.Today.AddDays(days));
             action.Should().NotThrow<ValidatorException>();
         }
 
         [Fact]
         public void validate_once_configuration_error_test()
         {
-            Action action = () => SchedulerValidator.ValidateOnceConfiguration(null);
+            Action action = () => ConfigurationValidator.ValidateOnceConfiguration(null);
             action.Should().Throw<ValidatorException>();
-        }
-        [Fact]
-        public void validate_limit_start_date_null_correct_test()
-        {
-            Action action = () => SchedulerValidator.ValidateLimits(null,DateTime.Today);
-            action.Should().NotThrow<ValidatorException>();
         }
         [Fact]
         public void validate_limit_end_date_null_correct_test()
         {
-            Action action = () => SchedulerValidator.ValidateLimits( DateTime.Today, null);
-            action.Should().NotThrow<ValidatorException>();
-        }
-        [Fact]
-        public void validate_limit_star_end_date_null_correct_test()
-        {
-            Action action = () => SchedulerValidator.ValidateLimits(null, null);
+            Action action = () => ConfigurationValidator.ValidateLimits(DateOnly.MinValue, null);
             action.Should().NotThrow<ValidatorException>();
         }
         [Theory]
@@ -79,9 +67,9 @@ namespace Tests
         [InlineData(0,10)]
         public void validate_limit_correct_test(int startDays, int endDays)
         {
-            var startDate = DateTime.Today.AddDays(startDays);
-            var endDate = DateTime.Today.AddDays(endDays);  
-            Action action = () => SchedulerValidator.ValidateLimits(startDate, endDate);
+            var startDate = DateOnly.FromDateTime(DateTime.Today).AddDays(startDays);
+            var endDate = DateOnly.FromDateTime(DateTime.Today).AddDays(endDays);  
+            Action action = () => ConfigurationValidator.ValidateLimits(startDate, endDate);
             action.Should().NotThrow<ValidatorException>();
         }
 
@@ -90,9 +78,9 @@ namespace Tests
         [InlineData(0, -10)]
         public void validate_limit_error_test(int startDays, int endDays)
         {
-            var startDate = DateTime.Today.AddDays(startDays);
-            var endDate = DateTime.Today.AddDays(endDays);
-            Action action = () => SchedulerValidator.ValidateLimits(startDate, endDate);
+            var startDate = DateOnly.FromDateTime(DateTime.Today).AddDays(startDays);
+            var endDate = DateOnly.FromDateTime(DateTime.Today).AddDays(endDays);
+            Action action = () => ConfigurationValidator.ValidateLimits(startDate, endDate);
             action.Should().Throw<ValidatorException>();
         }
 
@@ -103,7 +91,7 @@ namespace Tests
         public void validate_date_between_nulls_test(int days)
         {
             var date = DateTime.Today.AddDays(days);
-            Action action = () => SchedulerValidator.ValidateDateBetweenLimits(null, null, date);
+            Action action = () => ConfigurationValidator.ValidateDateBetweenLimits(DateOnly.MinValue, null, date);
             action.Should().NotThrow<ValidatorException>();
         }
 
@@ -114,10 +102,10 @@ namespace Tests
         [InlineData(0, 50, 25)]
         public void validate_date_between_limits_correct_test(int startDays, int endDays, int days)
         {
-            var startDate = DateTime.Today.AddDays(startDays);
-            var endDate = DateTime.Today.AddDays(endDays);
+            var startDate = DateOnly.FromDateTime(DateTime.Today).AddDays(startDays);
+            var endDate = DateOnly.FromDateTime(DateTime.Today).AddDays(endDays);
             var date = DateTime.Today.AddDays(days);
-            Action action = () => SchedulerValidator.ValidateDateBetweenLimits(startDate, endDate, date);
+            Action action = () => ConfigurationValidator.ValidateDateBetweenLimits(startDate, endDate, date);
             action.Should().NotThrow<ValidatorException>();
         }
 
@@ -128,10 +116,10 @@ namespace Tests
         [InlineData(-50, 5, 25)]
         public void validate_date_between_limits_error_test(int startDays, int endDays, int days)
         {
-            var startDate = DateTime.Today.AddDays(startDays);
-            var endDate = DateTime.Today.AddDays(endDays);
+            var startDate = DateOnly.FromDateTime(DateTime.Today).AddDays(startDays);
+            var endDate = DateOnly.FromDateTime(DateTime.Today).AddDays(endDays);
             var date = DateTime.Today.AddDays(days);
-            Action action = () => SchedulerValidator.ValidateDateBetweenLimits(startDate, endDate, date);
+            Action action = () => ConfigurationValidator.ValidateDateBetweenLimits(startDate, endDate, date);
             action.Should().Throw<ValidatorException>();
         }
 
@@ -142,14 +130,14 @@ namespace Tests
         public void validate_once_time_not_null_correct_test(int seconds)
         {
             TimeOnly time = TimeOnly.FromDateTime(DateTime.Now.AddSeconds(seconds));
-            Action action = () => SchedulerValidator.ValidateOnceTimeNotNull(time);
+            Action action = () => ConfigurationValidator.ValidateOnceTimeNotNull(time);
             action.Should().NotThrow<ValidatorException>();
         }
 
         [Fact]
         public void validate_once_time_not_null_error_test()
         {
-            Action action = () => SchedulerValidator.ValidateOnceTimeNotNull(null);
+            Action action = () => ConfigurationValidator.ValidateOnceTimeNotNull(null);
             action.Should().Throw<ValidatorException>();
         }
 
@@ -160,7 +148,7 @@ namespace Tests
         {
             var startTime = TimeOnly.FromDateTime(DateTime.Now.AddSeconds(startOffset));
             var endTime = TimeOnly.FromDateTime(DateTime.Now.AddSeconds(endOffset));
-            Action action = () => SchedulerValidator.ValidateStartingEndingDaily(startTime, endTime);
+            Action action = () => ConfigurationValidator.ValidateStartingEndingDaily(startTime, endTime);
             action.Should().NotThrow<ValidatorException>();
         }
 
@@ -171,7 +159,7 @@ namespace Tests
         {
             var startTime = TimeOnly.FromDateTime(DateTime.Now.AddSeconds(startOffset));
             var endTime = TimeOnly.FromDateTime(DateTime.Now.AddSeconds(endOffset));
-            Action action = () => SchedulerValidator.ValidateStartingEndingDaily(startTime, endTime);
+            Action action = () => ConfigurationValidator.ValidateStartingEndingDaily(startTime, endTime);
             action.Should().Throw<ValidatorException>();
         }
 
@@ -179,7 +167,7 @@ namespace Tests
         public void validate_weekly_configuration_correct_test()
         {
             var listOfDays = new DayWeek[1]{ DayWeek.Friday};
-            Action action = () => SchedulerValidator.ValidateWeeklyConfiguration(listOfDays);
+            Action action = () => ConfigurationValidator.ValidateWeeklyConfiguration(listOfDays);
             action.Should().NotThrow<ValidatorException>();
         }
 
@@ -187,7 +175,7 @@ namespace Tests
         public void validate_weekly_configuration_error_test()
         {
             var listODays = Array.Empty<DayWeek>();
-            Action action = () => SchedulerValidator.ValidateWeeklyConfiguration(listODays);
+            Action action = () => ConfigurationValidator.ValidateWeeklyConfiguration(listODays);
             action.Should().Throw<ValidatorException>();
         }
     }

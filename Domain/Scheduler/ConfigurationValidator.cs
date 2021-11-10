@@ -1,6 +1,6 @@
 ﻿namespace Domain
 {
-    public static class SchedulerValidator
+    public static class ConfigurationValidator
     {
         public static void ValidateConfigurationEnabled(bool isEnabled)
         {
@@ -23,17 +23,17 @@
                 GenerateError("You must introduce a valid date to schedule");
             }
         }
-        public static void ValidateLimits(DateTime? startDate, DateTime? endDate)
+        public static void ValidateLimits(DateOnly startDate, DateOnly? endDate)
         {
-            if(startDate != null && endDate != null && endDate < startDate)
+            if(endDate != null && endDate < startDate)
             {
                 GenerateError("Start date must be earlier than end date.");
             }
         }
-        public static void ValidateDateBetweenLimits(DateTime? startDate, DateTime? endDate, DateTime? date)
+        public static void ValidateDateBetweenLimits(DateOnly startDate, DateOnly? endDate, DateTime? date)
         {
-            if((startDate > date && startDate != null) || 
-                (date > endDate && endDate != null))
+            if(startDate.ToDateTime(TimeOnly.MinValue) > date || 
+                (endDate.HasValue && date > endDate.Value.ToDateTime(TimeOnly.MaxValue)))
             {
                 GenerateError("The date to Scheduled is out of limits range.");
             }

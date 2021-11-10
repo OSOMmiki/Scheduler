@@ -17,7 +17,7 @@ namespace ConsoleUI
                
                 while (ConsoleMessages.AskNextDate())
                 { 
-                    string output = Scheduler.NextOnceDate(configuration);
+                    string output = Scheduler.ScheduleNextDate(configuration).Description;
                      Console.WriteLine(output);
                 } 
 

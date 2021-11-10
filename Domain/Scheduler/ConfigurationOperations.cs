@@ -37,8 +37,6 @@ namespace Domain
         public static DayWeek GetLastDayOfWeek(DayWeek[] daysOfWeek)
         {
             return daysOfWeek.OrderByDescending(D => D).First();
-        }
-
-        
+        }     
     }
 }

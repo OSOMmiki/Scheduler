@@ -7,6 +7,6 @@ var configuration = new Configuration()
 };
 
 
-Application application = new Application(configuration);
+var application = new Application(configuration);
 
 application.Run();
