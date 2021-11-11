@@ -2,9 +2,12 @@
 {
     public class Configuration
     {
-
+        public Configuration()
+        {
+            CurrentDate = DateOnly.FromDateTime(DateTime.Now);
+        }
         #region Input
-        public DateOnly InputDate => DateOnly.FromDateTime(DateTime.Now);
+        public DateOnly CurrentDate { get; set; }
 
         #endregion
 

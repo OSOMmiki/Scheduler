@@ -1,43 +1,32 @@
 ﻿namespace Domain
 {
-    public class Scheduler 
+    public class Scheduler
     {
-
-        public static SchedulerResult ScheduleNextDate(Configuration configuration)
+        public static SchedulerResult NextScheduleResult(Configuration configuration)
+        {
+            DateTime scheduledDate = ScheduleNextDate(configuration);
+            string resultDescription = ConfigurationDescriptionGenerator.GenerateDescription(configuration, scheduledDate);
+            return new SchedulerResult(scheduledDate, resultDescription);
+        }
+        private static DateTime ScheduleNextDate(Configuration configuration)
         {
             ConfigurationValidator.ValidateConfigurationEnabled(configuration.Enabled);
 
-            switch (GetExecutionType(configuration))
+            if (configuration.ConfigurationType == ConfigurationType.Once)
             {
-                case ExecutionType.Once:
-                    return GetOnceResult(configuration);
-                default:
-                    return new SchedulerResult(DateTime.MinValue, "Error");
+                return GetOnceResult(configuration);
             }
+            return GetRecurringResult(configuration);
         }
-        private static ExecutionType GetExecutionType(Configuration configuration)
-        {
-            if(configuration.ConfigurationType == ConfigurationType.Once)
-            {
-                return ExecutionType.Once;
-            }
-            switch (configuration.RecurringType)
-            {
-                case RecurringType.Daily:
-                    return ExecutionType.DailyRecurring;
-                case RecurringType.Weekly:
-                    return ExecutionType.WeeklyRecurring;
-            }
-            throw new SchedulerException("Invalid Configuration");
-        }
-
-        private static SchedulerResult GetOnceResult(Configuration configuration)
+        private static DateTime GetOnceResult(Configuration configuration)
         {
             ConfigurationValidator.ValidateOnceConfiguration(configuration.OnceDate);
 
-            DateTime schedulerDate = configuration.OnceDate.Value;
-            string resultDescription = ConfigurationDescriptionGenerator.GenerateDescription(configuration);
-            return new SchedulerResult(schedulerDate, resultDescription);
+            return configuration.OnceDate.Value;
+        }
+        private static DateTime GetRecurringResult(Configuration configuration)
+        {
+            throw new NotImplementedException(); //TODO
         }
     }
 }
