@@ -4,10 +4,10 @@
     {
         public Configuration()
         {
-            CurrentDate = DateOnly.FromDateTime(DateTime.Now);
+            CurrentDate = DateTime.Now;
         }
         #region Input
-        public DateOnly CurrentDate { get; set; }
+        public DateTime CurrentDate { get; set; }
 
         #endregion
 

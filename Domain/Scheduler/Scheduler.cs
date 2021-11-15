@@ -28,5 +28,15 @@
         {
             throw new NotImplementedException(); //TODO
         }
+
+        private static bool IsInDaySchedulePossible(Configuration configuration)
+        {
+            int currentTimeSecs = configuration.CurrentDate.TimeOfDay.TotalCompleteSeconds();
+            int startingSecs = configuration.DailyConfStartingTime.ToTimeSpan().TotalCompleteSeconds(); 
+            int endingSecs = configuration.DailyConfEndingTime.ToTimeSpan().TotalCompleteSeconds();
+            int dailyperiod = ConfigurationOperations.GetTotalSecondsPeriocity(configuration.DailyConfPeriodicity, configuration.DailyConfFrecuency);
+
+            return ((currentTimeSecs + dailyperiod) <= endingSecs); 
+        }
     }
 }

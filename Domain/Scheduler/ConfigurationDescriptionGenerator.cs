@@ -36,27 +36,6 @@ namespace Domain
             return recurringTypeDescription.ToString();
 
         }
-        private static string GetDailyConfigurationDescription(Configuration configuration)
-        {
-            throw new NotImplementedException(); //TODO
-        }
-        private static string GetDaysWeekDescription(DayWeek[] activeDays)
-        {
-            var activeDaysDescription = new StringBuilder();
-            activeDaysDescription.Append(" on");
-
-            var daysWeek = activeDays.OrderBy(D => D).ToArray();
-            activeDaysDescription.Append(activeDays[0].ToString());
-
-            for (int i = 1; i < activeDays.Length-1; i++)
-            {
-                activeDaysDescription.Append($", {activeDays[i]}");
-            }
-
-            activeDaysDescription.Append($" and {activeDays.Last()}");
-            return activeDaysDescription.ToString();
-
-        }
         private static StringBuilder GetRecurringPeriodicityDescription(RecurringType recurringType, int? periodicity)
         {
             var recurringPeriodicityDescription = new StringBuilder();
@@ -75,12 +54,71 @@ namespace Domain
                     recurringPeriodicityDescription.Append(" week");
                     break;
             }
-            if (periodicity > 0)
+            if (periodicity > 1)
             {
                 recurringPeriodicityDescription.Append('s');
             }
             
             return recurringPeriodicityDescription;
+        }
+        private static string GetDaysWeekDescription(DayWeek[] activeDays)
+        {
+            var activeDaysDescription = new StringBuilder();
+            activeDaysDescription.Append(" on");
+
+            var daysWeek = activeDays.OrderBy(D => D).ToArray();
+            activeDaysDescription.Append(activeDays[0].ToString());
+
+            for (int i = 1; i < activeDays.Length-1; i++)
+            {
+                activeDaysDescription.Append($", {activeDays[i]}");
+            }
+
+            activeDaysDescription.Append($" and {activeDays.Last()}");
+            return activeDaysDescription.ToString();
+
+        }
+        private static string GetDailyConfigurationDescription(Configuration configuration)
+        {
+
+            if (configuration.ConfigurationType == ConfigurationType.Once)
+            {
+                return $" at {configuration.DailyConfOnceTime}";
+            }
+            return GetDailyRecurringDescription(configuration);
+        }
+        private static string GetDailyRecurringDescription(Configuration configuration)
+        {
+            var recurringDailyPeriodicityDescription = new StringBuilder();
+
+            recurringDailyPeriodicityDescription.Append($" every");
+            if (configuration.DailyConfPeriodicity > 0)
+            {
+                recurringDailyPeriodicityDescription.Append($" {configuration.DailyConfPeriodicity}");
+            }
+            switch (configuration.DailyConfFrecuency)
+            {
+                case DailyFrecuency.Hours:
+                    recurringDailyPeriodicityDescription.Append(" hour");
+                    break;
+                case DailyFrecuency.Minutes:
+                    recurringDailyPeriodicityDescription.Append(" minute");
+                    break;
+                case DailyFrecuency.Seconds:
+                    recurringDailyPeriodicityDescription.Append(" second");
+                    break;
+            }
+            if (configuration.DailyConfPeriodicity > 1)
+            {
+                recurringDailyPeriodicityDescription.Append('s');
+            }
+
+            recurringDailyPeriodicityDescription.Append(GetDailyStartingEndingDescription(configuration.DailyConfStartingTime, configuration.DailyConfEndingTime));
+            return recurringDailyPeriodicityDescription.ToString();
+        }
+        private static string GetDailyStartingEndingDescription(TimeOnly startingTime, TimeOnly endingTime)
+        {
+            return $" between {startingTime} and {endingTime}";
         }
         private static string GetSchedulerNextDateDescription(DateTime executionDate)
         {
