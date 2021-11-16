@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain
+﻿namespace Domain
 {
     public static class ConfigurationOperations
     {
@@ -38,5 +32,11 @@ namespace Domain
         {
             return daysOfWeek.OrderByDescending(D => D).First();
         }     
+
+        public static int GetCurrentDailyIteration(int currentTimeSecs, int startingSecs, int dailyperiod)
+        {
+            int timeOffset = currentTimeSecs - startingSecs;
+            return timeOffset / dailyperiod;
+        }
     }
 }

@@ -60,6 +60,17 @@ namespace Tests
             result.Should().Be(expected);
         }
 
+
+        [Theory]
+        [InlineData(100,10,10,9)]
+        [InlineData(102, 10, 10, 9)]
+        [InlineData(107, 10, 10, 9)]
+        [InlineData(137, 10, 10, 12)]
+        public void get_current_daily_iteration(int currentTimeSecs, int startingSecs, int dailyperiod, int expected)
+        {
+            ConfigurationOperations.GetCurrentDailyIteration(currentTimeSecs, startingSecs,dailyperiod).Should().Be(expected);  
+        }
+
         #region AuxiliarClassData
         public class LastDayOfWeeekData : TheoryData<DayWeek, DayWeek[]>
         {
