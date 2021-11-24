@@ -125,7 +125,7 @@ namespace Domain
             string schedulerNextDateDescription = $" Scheduler will be used on {executionDate:d}";
             if(executionDate.TimeOfDay > TimeSpan.Zero)
             {
-                schedulerNextDateDescription += $" at {executionDate:t}";
+                schedulerNextDateDescription += $" at {executionDate:HH:mm:ss}";
             }
 
             return schedulerNextDateDescription;

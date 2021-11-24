@@ -2,6 +2,16 @@
 {
     public class Scheduler
     {
+        public static SchedulerResult[] ScheduleMulitple(Configuration configuration, int numberOfSchedules)
+        {
+            var result = new SchedulerResult[numberOfSchedules];
+            for (int i = 0; i < numberOfSchedules; i++)
+            {
+                result[i] = NextScheduleResult(configuration);
+                configuration.CurrentDate = result[i].ScheduledDate;
+            }
+            return result;
+        }
         public static SchedulerResult NextScheduleResult(Configuration configuration)
         {
             DateTime scheduledDate = ScheduleNextDate(configuration);
@@ -56,7 +66,25 @@
         }
         private static DateTime GetNextDateRecurringWeekly(Configuration configuration)
         {
-            throw new NotImplementedException();
+            ConfigurationValidator.ValidateWeeklyConfiguration(configuration.WeeklyConfigActiveDays);
+            DayWeek currentDay = configuration.CurrentDate.GetDayWeek();
+            DayWeek[] activeDays = configuration.WeeklyConfigActiveDays;
+            if (ConfigurationOperations.CheckContainsDayOfWeek(currentDay, activeDays))
+            {
+                return configuration.CurrentDate.Date;
+            }
+            return configuration.CurrentDate.Date.AddDays(GetNumberOfDaysToNextActiveDay(currentDay, activeDays));
+        }
+
+        private static double GetNumberOfDaysToNextActiveDay(DayWeek currentDay, DayWeek[] activeDays)
+        {
+            if (currentDay == ConfigurationOperations.GetLastDayOfWeek(activeDays))
+            {
+                return (double)ConfigurationOperations.GetFirstDayOfWeek(activeDays);
+            }
+            var nextDayWeek = activeDays.OrderBy(D => D).Where(D => D > currentDay).First();
+
+            return nextDayWeek - currentDay;
         }
         #endregion
 
