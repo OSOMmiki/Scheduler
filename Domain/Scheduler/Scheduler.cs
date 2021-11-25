@@ -36,20 +36,30 @@
         }
         private static DateTime GetRecurringResult(Configuration configuration)
         {
+            ConfigurationValidator.ValidateDateBetweenLimits(configuration.StartDate, configuration.EndDate, configuration.CurrentDate);
+            var recurringDate = GetNextDateRecurring(configuration);
 
-            if(configuration.DailyConfType == ConfigurationType.Once)
+            if (configuration.DailyConfType == ConfigurationType.Once)
             {
                 ConfigurationValidator.ValidateOnceTimeNotNull(configuration.DailyConfOnceTime);
-                return GetNextDateRecurring(configuration).Add(configuration.DailyConfOnceTime.Value.ToTimeSpan());
+                return recurringDate.Add(configuration.DailyConfOnceTime.Value.ToTimeSpan());
             }
-            var recurringDate = GetNextDateRecurring(configuration);
-            //recurringDate = recurringDate.Add(GetNextDailyExecution(configuration));
-            return recurringDate;
+            else
+            {
+                return recurringDate.Add(GetNextDailyRecurring(configuration));
+            }
+            
         }
+
+        
 
         #region NextDateRecurring
         private static DateTime GetNextDateRecurring(Configuration configuration)
         {
+            if (!configuration.IsDailySchedulingFinished())
+            {
+                return configuration.CurrentDate.Date;
+            }
             if(configuration.RecurringType  == RecurringType.Daily)
             {
                 return GetNextDateRecurringDaily(configuration.CurrentDate, configuration.Periodicity);
@@ -69,18 +79,21 @@
             ConfigurationValidator.ValidateWeeklyConfiguration(configuration.WeeklyConfigActiveDays);
             DayWeek currentDay = configuration.CurrentDate.GetDayWeek();
             DayWeek[] activeDays = configuration.WeeklyConfigActiveDays;
-            if (ConfigurationOperations.CheckContainsDayOfWeek(currentDay, activeDays))
-            {
-                return configuration.CurrentDate.Date;
-            }
-            return configuration.CurrentDate.Date.AddDays(GetNumberOfDaysToNextActiveDay(currentDay, activeDays));
+            return configuration.CurrentDate.Date.AddDays(GetNumberOfDaysToNextActiveDay(currentDay, activeDays, configuration.WeeklyConfigPeriodicity));
         }
 
-        private static double GetNumberOfDaysToNextActiveDay(DayWeek currentDay, DayWeek[] activeDays)
+        private static double GetNumberOfDaysToNextActiveDay(DayWeek currentDay, DayWeek[] activeDays, int weeklyPeriodicity)
         {
-            if (currentDay == ConfigurationOperations.GetLastDayOfWeek(activeDays))
+            DayWeek lastDayOfWeek = ConfigurationOperations.GetLastDayOfWeek(activeDays);
+            if (currentDay >= lastDayOfWeek)
             {
-                return (double)ConfigurationOperations.GetFirstDayOfWeek(activeDays);
+                double daysOffset = (double)ConfigurationOperations.GetFirstDayOfWeek(activeDays);
+                daysOffset += DayWeek.Sunday - currentDay;
+                if (currentDay == lastDayOfWeek)
+                {
+                    daysOffset += (weeklyPeriodicity - 1) * 7;
+                }
+                return daysOffset;
             }
             var nextDayWeek = activeDays.OrderBy(D => D).Where(D => D > currentDay).First();
 
@@ -88,21 +101,38 @@
         }
         #endregion
 
-        private static int GetNextDailyIteraction(Configuration configuration)
+        #region NextDailyRecurring
+        private static TimeSpan GetNextDailyRecurring(Configuration configuration)
         {
-            int currentTimeSecs = configuration.CurrentDate.TimeOfDay.TotalCompleteSeconds();
-            int startingSecs = configuration.DailyConfStartingTime.ToTimeSpan().TotalCompleteSeconds(); 
-            int endingSecs = configuration.DailyConfEndingTime.ToTimeSpan().TotalCompleteSeconds();
-            int dailyperiod = ConfigurationOperations.GetTotalSecondsPeriocity(configuration.DailyConfPeriodicity, configuration.DailyConfFrecuency);
-
-            if((endingSecs - startingSecs) < dailyperiod)
+            ConfigurationValidator.ValidateStartingEndingDaily(configuration.DailyConfStartingTime, configuration.DailyConfEndingTime);
+            var iteration = GetNextDailyIteraction(configuration);
+            if(iteration == -1)
             {
-                return -1;
+                return configuration.DailyConfStartingTime.ToTimeSpan();
             }
             else
             {
-                return ConfigurationOperations.GetCurrentDailyIteration(currentTimeSecs, startingSecs, dailyperiod) + 1;
+                double period = (double)ConfigurationOperations.GetTotalSecondsPeriocity(configuration.DailyConfPeriodicity, configuration.DailyConfFrecuency);
+                return configuration.DailyConfStartingTime.Add(TimeSpan.FromSeconds(period * iteration)).ToTimeSpan();
             }
         }
+        private static int GetNextDailyIteraction(Configuration configuration)
+        {
+            if (configuration.IsDailySchedulingFinished())
+            {
+                return -1;
+            }
+            if(configuration.CurrentDate.GetTimeOnly() < configuration.DailyConfStartingTime)
+            {
+                return 0;
+            }
+            int currentTimeSecs = configuration.CurrentDate.TimeOfDay.TotalCompleteSeconds();
+            int startingSecs = configuration.DailyConfStartingTime.ToTimeSpan().TotalCompleteSeconds();
+            int dailyperiod = ConfigurationOperations.GetTotalSecondsPeriocity(configuration.DailyConfPeriodicity, configuration.DailyConfFrecuency);
+            return ConfigurationOperations.GetCurrentDailyIteration(currentTimeSecs, startingSecs, dailyperiod)+1;
+            
+        }
+
+        #endregion
     }
 }

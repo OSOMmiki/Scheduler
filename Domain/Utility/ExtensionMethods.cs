@@ -2,6 +2,14 @@
 {
     public static class ExtensionMethods
     {
+        public static DateOnly GetDateOnly(this DateTime dateTime)
+        {
+            return DateOnly.FromDateTime(dateTime); 
+        }
+        public static TimeOnly GetTimeOnly(this DateTime dateTime)
+        {
+            return TimeOnly.FromDateTime(dateTime);
+        }
         public static int TotalCompleteSeconds(this TimeSpan time)
         {
             int seconds = time.Hours * 3600;
@@ -30,6 +38,23 @@
                     return DayWeek.Saturday;
                 default:
                     throw new SchedulerException("Missing day of Week");
+            }
+        }
+
+        public static bool IsDailySchedulingFinished(this Configuration configuration)
+        {
+            if(configuration.RecurringType == RecurringType.Weekly &&  
+                !ConfigurationOperations.CheckContainsDayOfWeek(configuration.CurrentDate.GetDayWeek(), configuration.WeeklyConfigActiveDays)) 
+            { 
+                return true; 
+            }
+            if(configuration.DailyConfType == ConfigurationType.Once)
+            {
+                return configuration.CurrentDate.GetTimeOnly() >= configuration.DailyConfOnceTime;
+            }
+            else
+            {
+                return configuration.CurrentDate.GetTimeOnly() >= configuration.DailyConfEndingTime;
             }
         }
     }

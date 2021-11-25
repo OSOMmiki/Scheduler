@@ -20,12 +20,16 @@ namespace Domain
             {
                 return "Occurs once.";
             }
-            return GetRecurringTypeDescription(configuration);
+            return GetRecurringTypeDescription(configuration) + ".";
         }
         private static string GetRecurringTypeDescription(Configuration configuration)
         {
+            int periodicity = configuration.RecurringType == RecurringType.Daily
+                ? configuration.Periodicity.Value
+                : configuration.WeeklyConfigPeriodicity;
+
             StringBuilder recurringTypeDescription = 
-                GetRecurringPeriodicityDescription(configuration.RecurringType, configuration.Periodicity);
+                GetRecurringPeriodicityDescription(configuration.RecurringType, periodicity);
 
             if(configuration.RecurringType == RecurringType.Weekly)
             {
@@ -41,9 +45,9 @@ namespace Domain
             var recurringPeriodicityDescription = new StringBuilder();
 
             recurringPeriodicityDescription.Append($"Occurs every");
-            if (periodicity > 0)
+            if (periodicity.Value > 1)
             {
-                recurringPeriodicityDescription.Append($" {periodicity}");
+                recurringPeriodicityDescription.Append($" {periodicity.Value}");
             }
             switch (recurringType)
             {
@@ -54,7 +58,7 @@ namespace Domain
                     recurringPeriodicityDescription.Append(" week");
                     break;
             }
-            if (periodicity > 1)
+            if (periodicity.Value > 1)
             {
                 recurringPeriodicityDescription.Append('s');
             }
@@ -64,7 +68,7 @@ namespace Domain
         private static string GetDaysWeekDescription(DayWeek[] activeDays)
         {
             var activeDaysDescription = new StringBuilder();
-            activeDaysDescription.Append(" on");
+            activeDaysDescription.Append(" on ");
 
             var daysWeek = activeDays.OrderBy(D => D).ToArray();
             activeDaysDescription.Append(activeDays[0].ToString());
@@ -73,17 +77,19 @@ namespace Domain
             {
                 activeDaysDescription.Append($", {activeDays[i]}");
             }
-
-            activeDaysDescription.Append($" and {activeDays.Last()}");
+            if( activeDays.Length > 1)
+            {
+                activeDaysDescription.Append($" and {activeDays.Last()}");
+            }
             return activeDaysDescription.ToString();
 
         }
         private static string GetDailyConfigurationDescription(Configuration configuration)
         {
 
-            if (configuration.ConfigurationType == ConfigurationType.Once)
+            if (configuration.DailyConfType == ConfigurationType.Once)
             {
-                return $" at {configuration.DailyConfOnceTime}";
+                return $" at {configuration.DailyConfOnceTime:HH:mm:ss}";
             }
             return GetDailyRecurringDescription(configuration);
         }
@@ -118,11 +124,11 @@ namespace Domain
         }
         private static string GetDailyStartingEndingDescription(TimeOnly startingTime, TimeOnly endingTime)
         {
-            return $" between {startingTime} and {endingTime}";
+            return $" between {startingTime:HH:mm:ss} and {endingTime:HH:mm:ss}";
         }
         private static string GetSchedulerNextDateDescription(DateTime executionDate)
         {
-            string schedulerNextDateDescription = $" Scheduler will be used on {executionDate:d}";
+            string schedulerNextDateDescription = $" Scheduler will be used on {executionDate:dd/MM/yyyy}";
             if(executionDate.TimeOfDay > TimeSpan.Zero)
             {
                 schedulerNextDateDescription += $" at {executionDate:HH:mm:ss}";
@@ -132,12 +138,12 @@ namespace Domain
         }
         private static string GetStartingDateDescription(DateOnly startingDate)
         {
-            return $" starting on {startingDate:d}";
+            return $" starting on {startingDate:dd/MM/yyyy}";
         }
         private static string GetEndingDateDescription(DateOnly? endingDate)
         {
             string endingDateDescription =  endingDate.HasValue 
-                ? $" ending on {endingDate:d}"
+                ? $" ending on {endingDate:dd/MM/yyyy}"
                 : string.Empty;
 
             return endingDateDescription;

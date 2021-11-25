@@ -30,10 +30,10 @@
                 GenerateError("Start date must be earlier than end date.");
             }
         }
-        public static void ValidateDateBetweenLimits(DateOnly startDate, DateOnly? endDate, DateTime? date)
+        public static void ValidateDateBetweenLimits(DateOnly startDate, DateOnly? endDate, DateTime date)
         {
-            if(startDate.ToDateTime(TimeOnly.MinValue) > date || 
-                (endDate.HasValue && date > endDate.Value.ToDateTime(TimeOnly.MaxValue)))
+            if(startDate > date.GetDateOnly() || 
+                (endDate.HasValue && date.GetDateOnly() > endDate.Value))
             {
                 GenerateError("The date to Scheduled is out of limits range.");
             }
